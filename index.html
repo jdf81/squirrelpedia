@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#3a2817" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Squirrelpedia" />
+<meta name="format-detection" content="telephone=no" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png" />
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+<link rel="icon" type="image/png" href="icon-192.png" />
+<title>Squirrelpedia — A Field Guide to the Sciuridae</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Upright:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f1e6d0;
+    --parchment-dark: #e6d8b8;
+    --ink: #2a1a0e;
+    --ink-soft: #5a4332;
+    --sepia: #8b5a2b;
+    --moss: #4a5d3a;
+    --moss-dark: #2f3d24;
+    --rust: #a04b22;
+    --gold: #b8893a;
+    --shadow: rgba(58, 40, 23, 0.25);
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; overscroll-behavior-y: contain; }
+  body {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(139, 90, 43, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(74, 93, 58, 0.05) 0%, transparent 50%),
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence baseFrequency='0.85' numOctaves='2' seed='3'/><feColorMatrix values='0 0 0 0 0.2 0 0 0 0 0.15 0 0 0 0 0.08 0 0 0 0.08 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  }
+
+  /* ====== HEADER ====== */
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding-top: var(--safe-top);
+    background: linear-gradient(180deg, #3a2817 0%, #2a1a0e 100%);
+    color: var(--parchment);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    border-bottom: 3px double var(--gold);
+  }
+  .top-bar-inner {
+    padding: 14px 18px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .brand {
+    font-family: 'Cormorant Upright', serif;
+    font-weight: 600;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-mark {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    color: var(--gold);
+  }
+  .brand-sub {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.85;
+    margin-top: 3px;
+    font-family: 'DM Mono', monospace;
+  }
+  .search-btn {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+  }
+  .search-btn:active { background: var(--gold); color: var(--ink); }
+
+  /* ====== HERO ====== */
+  .hero {
+    padding: 30px 20px 22px;
+    text-align: center;
+    border-bottom: 1px solid rgba(58, 40, 23, 0.2);
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-family: 'Cormorant Upright', serif;
+    font-weight: 500;
+    font-size: clamp(28px, 9vw, 42px);
+    line-height: 1.05;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .hero-title em { font-style: italic; color: var(--rust); font-weight: 500; }
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 14px 0 10px;
+    color: var(--sepia);
+  }
+  .hero-divider::before, .hero-divider::after {
+    content: "";
+    height: 1px;
+    background: var(--sepia);
+    width: 40px;
+    opacity: 0.5;
+  }
+  .hero-divider svg { width: 16px; height: 16px; opacity: 0.7; }
+  .hero-desc {
+    font-size: 15px;
+    color: var(--ink-soft);
+    font-style: italic;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* ====== TABS ====== */
+  .tabs-wrap {
+    position: sticky;
+    top: calc(var(--safe-top) + 56px);
+    z-index: 40;
+    background: var(--parchment);
+    background-image:
+      radial-gradient(circle at 20% 30%, rgba(139, 90, 43, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(74, 93, 58, 0.05) 0%, transparent 50%);
+    border-bottom: 1px solid rgba(58, 40, 23, 0.15);
+    box-shadow: 0 4px 12px -8px var(--shadow);
+  }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    background: transparent;
+    border: 1px solid rgba(58, 40, 23, 0.25);
+    color: var(--ink-soft);
+    padding: 10px 16px;
+    font-family: 'Cormorant Upright', serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .tab[aria-selected="true"] {
+    background: var(--ink);
+    color: var(--parchment);
+    border-color: var(--ink);
+  }
+  .tab .count {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    margin-left: 6px;
+    opacity: 0.6;
+  }
+
+  /* ====== CONTENT ====== */
+  main {
+    padding: 20px 16px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .continent-header {
+    margin: 6px 0 18px;
+    text-align: center;
+  }
+  .continent-title {
+    font-family: 'Cormorant Upright', serif;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+  .continent-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-top: 4px;
+  }
+  .continent-note {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 14px;
+    margin-top: 10px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+  }
+  @media (min-width: 600px) {
+    .grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+  }
+
+  .card {
+    background: #faf3e3;
+    border: 1px solid rgba(58, 40, 23, 0.2);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 2px 0 rgba(58, 40, 23, 0.08), 0 6px 14px -8px var(--shadow);
+  }
+  .card:active { transform: scale(0.97); }
+  .card.extinct { background: #ece2cd; }
+  .card.extinct::after {
+    content: "†";
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 18px;
+    color: var(--sepia);
+    z-index: 2;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  .card-img {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #d8c89a 0%, #b89968 100%);
+    border-bottom: 1px solid rgba(58, 40, 23, 0.15);
+  }
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: sepia(0.08) saturate(0.95);
+  }
+  .card-img > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .card-img .fallback {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: rgba(58, 40, 23, 0.5);
+  }
+  .card-img .fallback svg { width: 50%; height: 50%; }
+
+  .card-body {
+    padding: 10px 12px 12px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-name {
+    font-family: 'Cormorant Upright', serif;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.15;
+    margin: 0 0 3px;
+    color: var(--ink);
+  }
+  .card-sci {
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.2;
+  }
+  .card-tag {
+    margin-top: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--moss);
+    align-self: flex-start;
+    padding-top: 6px;
+    border-top: 1px solid rgba(58, 40, 23, 0.15);
+    width: 100%;
+  }
+  .card-tag.extinct-tag { color: var(--rust); }
+
+  /* ====== MODAL / DETAIL VIEW ====== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 6, 0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s;
+  }
+  .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 101;
+    background: var(--parchment);
+    border-top: 1px solid var(--gold);
+    border-top: 3px double var(--gold);
+    transform: translateY(100%);
+    transition: transform 0.32s cubic-bezier(.18,.89,.32,1.1), visibility 0s linear 0.32s;
+    max-height: 92vh;
+    max-height: 92dvh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.3);
+    padding-bottom: calc(var(--safe-bottom) + 30px);
+    visibility: hidden;
+  }
+  .modal.open { transform: translateY(0); visibility: visible; transition: transform 0.32s cubic-bezier(.18,.89,.32,1.1), visibility 0s linear 0s; }
+  @media (min-width: 760px) {
+    .modal {
+      left: 50%;
+      bottom: 50%;
+      transform: translate(-50%, 200%);
+      width: min(720px, 92vw);
+      max-height: 88vh;
+      border: 3px double var(--gold);
+    }
+    .modal.open { transform: translate(-50%, 50%); }
+  }
+
+  .modal-handle {
+    width: 44px;
+    height: 4px;
+    background: rgba(58, 40, 23, 0.25);
+    border-radius: 2px;
+    margin: 10px auto 0;
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(58, 40, 23, 0.08);
+    border: 1px solid rgba(58, 40, 23, 0.2);
+    color: var(--ink);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    z-index: 5;
+    font-size: 18px;
+  }
+  .modal-hero {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    max-height: 320px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #d8c89a 0%, #b89968 100%);
+    position: relative;
+    border-bottom: 1px solid rgba(58, 40, 23, 0.2);
+  }
+  .modal-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(0.08) saturate(0.95);
+  }
+  .modal-hero > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .modal-content { padding: 22px 22px 8px; }
+  @media (min-width: 600px) { .modal-content { padding: 28px 32px 8px; } }
+
+  .modal-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 8px;
+  }
+  .modal-name {
+    font-family: 'Cormorant Upright', serif;
+    font-weight: 500;
+    font-size: clamp(26px, 6vw, 34px);
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.005em;
+  }
+  .modal-sci {
+    font-style: italic;
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .modal-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--sepia), transparent);
+    margin: 18px 0;
+    opacity: 0.5;
+  }
+  .modal-flavor {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 15px;
+    line-height: 1.55;
+    margin-bottom: 18px;
+    padding-left: 14px;
+    border-left: 2px solid var(--gold);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid rgba(58, 40, 23, 0.2);
+  }
+  @media (min-width: 500px) {
+    .facts { grid-template-columns: 1fr 1fr; }
+    .facts .fact:nth-child(odd) { border-right: 1px solid rgba(58, 40, 23, 0.15); }
+  }
+  .fact {
+    padding: 14px 4px;
+    border-bottom: 1px solid rgba(58, 40, 23, 0.15);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .fact-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    color: var(--moss);
+    margin-top: 2px;
+  }
+  .fact-body { flex: 1; min-width: 0; }
+  .fact-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 4px;
+  }
+  .fact-value {
+    font-size: 15px;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+
+  /* Friendliness meter */
+  .meter {
+    display: flex;
+    gap: 3px;
+    margin-top: 6px;
+  }
+  .meter-pip {
+    width: 12px;
+    height: 18px;
+    background: rgba(58, 40, 23, 0.12);
+    border: 1px solid rgba(58, 40, 23, 0.2);
+  }
+  .meter-pip.on { background: var(--rust); border-color: var(--rust); }
+  .meter-label {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  /* ====== SEARCH OVERLAY ====== */
+  .search-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--parchment);
+    z-index: 200;
+    display: none;
+    flex-direction: column;
+    padding-top: var(--safe-top);
+  }
+  .search-overlay.open { display: flex; animation: slideDown 0.3s ease; }
+  @keyframes slideDown { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+  .search-input {
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .search-input::-webkit-search-cancel-button,
+  .search-input::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .search-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(58, 40, 23, 0.2);
+  }
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    padding: 8px 0;
+    color: var(--ink);
+    outline: none;
+  }
+  .search-input::placeholder { color: var(--ink-soft); font-style: italic; }
+  .search-cancel {
+    background: transparent;
+    border: none;
+    color: var(--ink);
+    font-family: 'Cormorant Upright', serif;
+    font-size: 15px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+  .search-results { flex: 1; overflow-y: auto; padding: 10px 18px 30px; }
+  .search-result {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(58, 40, 23, 0.1);
+    cursor: pointer;
+  }
+  .search-result img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: sepia(0.08);
+  }
+  .search-result-thumb {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    background: #d8c89a;
+    position: relative;
+    overflow: hidden;
+  }
+  .search-result-thumb > svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .search-result-fallback {
+    position: absolute;
+    inset: 0;
+    place-items: center;
+    color: rgba(58, 40, 23, 0.4);
+  }
+  .search-result-info { flex: 1; min-width: 0; }
+  .search-result-name {
+    font-family: 'Cormorant Upright', serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .search-result-sci {
+    font-style: italic;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .search-result-cont {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-top: 2px;
+  }
+  .search-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  /* ====== FOOTER ====== */
+  footer {
+    text-align: center;
+    padding: 30px 20px calc(var(--safe-bottom) + 30px);
+    color: var(--ink-soft);
+    font-style: italic;
+    font-size: 13px;
+    border-top: 1px solid rgba(58, 40, 23, 0.15);
+    margin-top: 40px;
+  }
+  footer .ornament {
+    font-size: 18px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-family: 'Cormorant Upright', serif;
+  }
+
+  /* Loading state */
+  .loading {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  /* Install prompt */
+  .install-banner {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    bottom: calc(var(--safe-bottom) + 16px);
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 14px 16px;
+    z-index: 90;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid var(--gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .install-banner.show { display: flex; }
+  .install-banner-text {
+    flex: 1;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .install-banner-text strong {
+    font-family: 'Cormorant Upright', serif;
+    font-size: 15px;
+    display: block;
+    color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .install-banner-close {
+    background: transparent;
+    border: none;
+    color: var(--parchment);
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 4px 8px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card { animation: fadeUp 0.4s ease both; }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<header class="top-bar">
+  <div class="top-bar-inner">
+    <div>
+      <div class="brand">
+        <svg class="brand-mark" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+          <path d="M20 4c-3 0-5 2-5 5 0 1.5.5 2.5 1.5 3.5C14 13 12 15 12 18c0 2 1 3.5 2 4.5-1.5.5-3 2-3 4 0 1.5 1 2.5 2.5 2.5h7c4 0 7-3 7-7 0-2-1-4-2.5-5 1-1 1.5-2.5 1.5-4 0-2-1-3.5-2.5-4.5C24.5 7 25 6 25 5c0-1-1-1-1.5-1H20zm-1.5 5c.5 0 1 .5 1 1s-.5 1-1 1-1-.5-1-1 .5-1 1-1z"/>
+        </svg>
+        Squirrelpedia
+      </div>
+      <div class="brand-sub">A Field Guide • Est. 2026</div>
+    </div>
+    <button class="search-btn" id="openSearch" aria-label="Search">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3-3"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">A Compendium of the Family Sciuridae</div>
+  <h1 class="hero-title">Of Tails &<br><em>Treasures Buried</em></h1>
+  <div class="hero-divider">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-1 0-2 1-2 2 0 2 2 3 2 5-3 0-5 2-5 5 0 1 .5 2 1 3-2 1-3 3-3 5 0 1 1 2 2 2h10c1 0 2-1 2-2 0-2-1-4-3-5 .5-1 1-2 1-3 0-3-2-5-5-5 0-2 2-3 2-5 0-1-1-2-2-2z"/></svg>
+  </div>
+  <p class="hero-desc">From the bustling lawns of Brooklyn to the canopies of the Western Ghats, and through the deep time of the Eocene — herein, the squirrels of the world.</p>
+</section>
+
+<!-- Tabs -->
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs" role="tablist"></div>
+</div>
+
+<!-- Main content -->
+<main id="content"></main>
+
+<footer>
+  <div class="ornament">❦</div>
+  Compiled with care for the curious naturalist.<br>
+  <small style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.2em; text-transform:uppercase; opacity:.7;">Sciuridae • 285+ species worldwide</small>
+</footer>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="backdrop"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal-handle"></div>
+  <button class="modal-close" id="closeModal" aria-label="Close">✕</button>
+  <div id="modalBody"></div>
+</div>
+
+<!-- Search overlay -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-header">
+    <input type="search" class="search-input" id="searchInput" placeholder="Search by name or continent…" autocomplete="off" autocorrect="off" autocapitalize="none" />
+    <button class="search-cancel" id="closeSearch">Cancel</button>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
+<!-- Install banner -->
+<div class="install-banner" id="installBanner">
+  <div class="install-banner-text">
+    <strong>Install Squirrelpedia</strong>
+    Tap <span style="font-family:monospace;">⎙</span> then "Add to Home Screen" for offline access.
+  </div>
+  <button class="install-banner-close" id="dismissInstall" aria-label="Dismiss">✕</button>
+</div>
+
+<script src="data.js"></script>
+<script src="svg-art.js"></script>
+<script src="app.js"></script>
+<script>
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(()=>{});
+    });
+  }
+</script>
+</body>
+</html>
